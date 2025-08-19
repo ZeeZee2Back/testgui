@@ -1,1 +1,363 @@
-local Players,RunService,TweenService,CoreGui,TeleportService,HttpService,UserInputService=game:GetService("Players"),game:GetService("RunService"),game:GetService("TweenService"),game:GetService("CoreGui"),game:GetService("TeleportService"),game:GetService("HttpService"),game:GetService("UserInputService");local player=Players.LocalPlayer;local playerGui=player:WaitForChild("PlayerGui");local screenGui=Instance.new("ScreenGui",playerGui)screenGui.Name="ARSNEALGUI";screenGui.ResetOnSpawn=false;screenGui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling;local mainFrame=Instance.new("Frame",screenGui)mainFrame.Size=UDim2.new(0,280,0,320);mainFrame.Position=UDim2.new(0,10,0,10);mainFrame.BackgroundColor3=Color3.fromRGB(200,200,200);mainFrame.BorderSizePixel=0;Instance.new("UICorner",mainFrame).CornerRadius=UDim.new(0,16);local purpleBorder=Instance.new("Frame",mainFrame)purpleBorder.Position=UDim2.new(0,-2,0,-2);purpleBorder.Size=UDim2.new(1,4,1,4);purpleBorder.BackgroundColor3=Color3.fromRGB(150,150,150);purpleBorder.ZIndex=-1;Instance.new("UICorner",purpleBorder).CornerRadius=UDim.new(0,18);local titleBar=Instance.new("Frame",mainFrame)titleBar.Size=UDim2.new(1,0,0,40);titleBar.BackgroundTransparency=1;local titleLabel=Instance.new("TextLabel",titleBar)titleLabel.Size=UDim2.new(1,-15,1,0);titleLabel.Position=UDim2.new(0,15,0,0);titleLabel.BackgroundTransparency=1;titleLabel.Text="🔮 Timmy Arsneal GUI";titleLabel.TextColor3=Color3.fromRGB(100,100,100);titleLabel.Font=Enum.Font.GothamBold;titleLabel.TextSize=16;titleLabel.TextXAlignment=Enum.TextXAlignment.Left;local tabFrame=Instance.new("Frame",mainFrame)tabFrame.Size=UDim2.new(1,-20,0,35);tabFrame.Position=UDim2.new(0,10,0,45);tabFrame.BackgroundTransparency=1;local function createModernTab(p,t,pos)local tab=Instance.new("TextButton",p)tab.Size=UDim2.new(0.33,-6,1,0);tab.Position=pos;tab.BackgroundColor3=Color3.fromRGB(35,35,35);tab.Text=t;tab.TextColor3=Color3.fromRGB(255,255,255);tab.Font=Enum.Font.GothamBold;tab.TextSize=14;tab.BorderSizePixel=0;Instance.new("UICorner",tab).CornerRadius=UDim.new(0,10);return tab end;local mainTab=createModernTab(tabFrame,"AIM",UDim2.new(0,0,0,0));local espTab=createModernTab(tabFrame,"ESP",UDim2.new(0.33,6,0,0));local moreTab=createModernTab(tabFrame,"FUN / EXTRA",UDim2.new(0.66,12,0,0));local mainContent=Instance.new("Frame",mainFrame)mainContent.Size=UDim2.new(1,-20,1,-90);mainContent.Position=UDim2.new(0,10,0,85);mainContent.BackgroundTransparency=1;mainContent.Visible=true;local espContent=Instance.new("Frame",mainFrame)espContent.Size=UDim2.new(1,-20,1,-90);espContent.Position=UDim2.new(0,10,0,85);espContent.BackgroundTransparency=1;espContent.Visible=false;local moreContent=Instance.new("Frame",mainFrame)moreContent.Size=UDim2.new(1,-20,1,-90);moreContent.Position=UDim2.new(0,10,0,85);moreContent.BackgroundTransparency=1;moreContent.Visible=false;local function createToggleButton(p,t,pos,cb)local b=Instance.new("TextButton",p)b.Size=UDim2.new(0,110,0,35);b.Position=pos;b.BackgroundColor3=Color3.fromRGB(0,0,0);b.Text=t;b.TextColor3=Color3.fromRGB(255,255,255);b.Font=Enum.Font.GothamBold;b.TextSize=16;b.BorderSizePixel=0;Instance.new("UICorner",b).CornerRadius=UDim.new(0,8);local toggled=false;b.MouseButton1Click:Connect(function()toggled=not toggled;if toggled then b.BackgroundColor3=Color3.fromRGB(0,255,0)else b.BackgroundColor3=Color3.fromRGB(0,0,0)end;pcall(cb,toggled)end);return b end;createToggleButton(mainContent,"Aimbot",UDim2.new(0,0,0,10),function(on)if on then loadstring(game:HttpGet("https://raw.githubusercontent.com/BongBongWee/Rblx-Scripts/main/chatgptaimlock.lua"))()else print("STOPRUNNINGMIIIIAAIM")end end);local function createSlider(p,l,pos,min,max,def,cb)local sf=Instance.new("Frame",p)sf.Size=UDim2.new(0,200,0,50);sf.Position=pos;sf.BackgroundTransparency=1;local label=Instance.new("TextLabel",sf)label.Size=UDim2.new(1,0,0,20);label.Position=UDim2.new(0,0,0,0);label.BackgroundTransparency=1;label.Text=l;label.TextColor3=Color3.fromRGB(0,0,0);label.Font=Enum.Font.GothamBold;label.TextSize=14;label.TextXAlignment=Enum.TextXAlignment.Left;local sb=Instance.new("Frame",sf)sb.Size=UDim2.new(1,0,0,8);sb.Position=UDim2.new(0,0,0,30);sb.BackgroundColor3=Color3.fromRGB(35,35,35);sb.BorderSizePixel=0;sb.AnchorPoint=Vector2.new(0,0);local sfFill=Instance.new("Frame",sb)sfFill.Size=UDim2.new((def-min)/(max-min),0,1,0);sfFill.BackgroundColor3=Color3.fromRGB(0,255,0);sfFill.BorderSizePixel=0;local dragging=false;sb.InputBegan:Connect(function(i)if i.UserInputType==Enum.UserInputType.MouseButton1 then dragging=true end end);sb.InputEnded:Connect(function(i)if i.UserInputType==Enum.UserInputType.MouseButton1 then dragging=false end end);sb.InputChanged:Connect(function(i)if dragging and i.UserInputType==Enum.UserInputType.MouseMovement then local rel=math.clamp(i.Position.X-sb.AbsolutePosition.X,0,sb.AbsoluteSize.X)local val=min+(rel/sb.AbsoluteSize.X)*(max-min);sfFill.Size=UDim2.new(rel/sb.AbsoluteSize.X,0,1,0);if cb then cb(val,label)end end end);if cb then cb(def,label)end;return sf end;createSlider(moreContent,"Fov Size (182)",UDim2.new(0,0,0,10),1,999,182,function(v,l)local r=math.floor(v)l.Text="Fov Size ("..tostring(r)..")"print("SetFov "..r)end);local currentTab="Main";local function switchTab(tab)local inactiveColor=Color3.fromRGB(35,35,35)local activeColor=Color3.fromRGB(100,100,100);mainTab.BackgroundColor3=inactiveColor;mainTab.TextColor3=Color3.fromRGB(255,255,255);espTab.BackgroundColor3=inactiveColor;espTab.TextColor3=Color3.fromRGB(255,255,255);moreTab.BackgroundColor3=inactiveColor;moreTab.TextColor3=Color3.fromRGB(255,255,255);mainContent.Visible=false;espContent.Visible=false;moreContent.Visible=false;if tab=="Main"then mainTab.BackgroundColor3=activeColor;mainTab.TextColor3=Color3.fromRGB(255,255,255);mainContent.Visible=true elseif tab=="ESP"then espTab.BackgroundColor3=activeColor;espTab.TextColor3=Color3.fromRGB(255,255,255);espContent.Visible=true elseif tab=="More"then moreTab.BackgroundColor3=activeColor;moreTab.TextColor3=Color3.fromRGB(255,255,255);moreContent.Visible=true end;currentTab=tab end;mainTab.MouseButton1Click:Connect(function()switchTab("Main")end);espTab.MouseButton1Click:Connect(function()switchTab("ESP")end);moreTab.MouseButton1Click:Connect(function()switchTab("More")end);local dragging,dragStart,startPos=false;local function beginDrag(i)dragging=true;dragStart=i.Position;startPos=mainFrame.Position end;local function updateDrag(i)if dragging then local delta=i.Position-dragStart;mainFrame.Position=UDim2.new(startPos.X.Scale,startPos.X.Offset+delta.X,startPos.Y.Scale,startPos.Y.Offset+delta.Y)end end;local function endDrag()dragging=false end;titleBar.InputBegan:Connect(function(i)if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then beginDrag(i)end end);titleBar.InputChanged:Connect(function(i)if i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch then updateDrag(i)end end);UserInputService.InputEnded:Connect(function(i)if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then endDrag()end end);UserInputService.InputBegan:Connect(function(i,g)if g then return end;if i.KeyCode==Enum.KeyCode.X then screenGui.Enabled=not screenGui.Enabled end end)
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "TestGUI"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+screenGui.ResetOnSpawn = false
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 300, 0, 300)
+frame.Position = UDim2.new(0.5, -150, 0.5, -150)
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+frame.Parent = screenGui
+frame.Active = true
+frame.Draggable = true
+
+local topBar = Instance.new("Frame")
+topBar.Size = UDim2.new(1, 0, 0, 30)
+topBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+topBar.Parent = frame
+topBar.Active = true
+
+local title = Instance.new("TextLabel")
+title.Text = "Test GUI"
+title.Size = UDim2.new(1, 0, 1, 0)
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.fromRGB(255, 0, 0)
+title.Font = Enum.Font.SourceSansBold
+title.TextSize = 20
+title.Parent = topBar
+
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 30, 1, 0)
+closeButton.Position = UDim2.new(1, -30, 0, 0)
+closeButton.BackgroundTransparency = 1
+closeButton.Text = "X"
+closeButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+closeButton.Font = Enum.Font.SourceSansBold
+closeButton.TextSize = 20
+closeButton.Parent = topBar
+
+local toggleStates = {AIMBOT=false, ["BOX ESP"]=false, ["TEAM CHECK"]=false}
+local guiVisible = true
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+local ESP_Boxes = {}
+local ESP_Connection
+
+local function createBox()
+    local lines = {}
+    for i = 1, 8 do
+        local ln = Drawing.new("Line")
+        ln.Thickness = 2
+        ln.Transparency = 1
+        ln.Visible = false
+        table.insert(lines, ln)
+    end
+    return lines
+end
+
+local function addBox(player)
+    if player == LocalPlayer or ESP_Boxes[player] then return end
+    ESP_Boxes[player] = createBox()
+end
+
+local function removeBox(player)
+    if ESP_Boxes[player] then
+        for _, ln in ipairs(ESP_Boxes[player]) do ln:Remove() end
+        ESP_Boxes[player] = nil
+    end
+end
+
+local function enableESP()
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer then addBox(p) end
+    end
+    Players.PlayerAdded:Connect(addBox)
+    Players.PlayerRemoving:Connect(removeBox)
+    ESP_Connection = RunService.RenderStepped:Connect(function()
+        for p, lines in pairs(ESP_Boxes) do
+            local ch = p.Character
+            local hrp = ch and ch:FindFirstChild("HumanoidRootPart")
+            local hd = ch and ch:FindFirstChild("Head")
+            local teamCheck = toggleStates["TEAM CHECK"]
+            if hrp and hd and (not teamCheck or p.Team ~= LocalPlayer.Team) then
+                local pos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
+                if onScreen then
+                    local topPos = Camera:WorldToViewportPoint(hd.Position + Vector3.new(0,0.5,0))
+                    local bottomPos = Camera:WorldToViewportPoint(hrp.Position - Vector3.new(0,3,0))
+                    local height = math.abs(topPos.Y - bottomPos.Y)
+                    local width = height / 2
+                    local x = pos.X - width / 2
+                    local y = pos.Y - height / 2
+                    local corner = height * 0.2
+                    local col = p.TeamColor.Color
+                    lines[1].From = Vector2.new(x, y)
+                    lines[1].To = Vector2.new(x+corner, y)
+                    lines[2].From = Vector2.new(x, y)
+                    lines[2].To = Vector2.new(x, y+corner)
+                    lines[3].From = Vector2.new(x+width-corner, y)
+                    lines[3].To = Vector2.new(x+width, y)
+                    lines[4].From = Vector2.new(x+width, y)
+                    lines[4].To = Vector2.new(x+width, y+corner)
+                    lines[5].From = Vector2.new(x, y+height-corner)
+                    lines[5].To = Vector2.new(x, y+height)
+                    lines[6].From = Vector2.new(x, y+height)
+                    lines[6].To = Vector2.new(x+corner, y+height)
+                    lines[7].From = Vector2.new(x+width-corner, y+height)
+                    lines[7].To = Vector2.new(x+width, y+height)
+                    lines[8].From = Vector2.new(x+width, y+height-corner)
+                    lines[8].To = Vector2.new(x+width, y+height)
+                    for _, l in ipairs(lines) do
+                        l.Color = col
+                        l.Visible = true
+                    end
+                else
+                    for _, l in ipairs(lines) do l.Visible = false end
+                end
+            else
+                for _, l in ipairs(lines) do l.Visible = false end
+            end
+        end
+    end)
+end
+
+local function disableESP()
+    if ESP_Connection then ESP_Connection:Disconnect() ESP_Connection = nil end
+    for _, lines in pairs(ESP_Boxes) do
+        for _, l in ipairs(lines) do l:Remove() end
+    end
+    ESP_Boxes = {}
+end
+
+-- Create checkboxes for options
+local options = {"AIMBOT","BOX ESP","TEAM CHECK"}
+for i, text in ipairs(options) do
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(0, 200, 0, 30)
+    label.Position = UDim2.new(0, 40, 0, 35 + (i-1)*35)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.Font = Enum.Font.SourceSansBold
+    label.TextSize = 18
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = frame
+
+    local box = Instance.new("TextButton")
+    box.Size = UDim2.new(0, 20, 0, 20)
+    box.Position = UDim2.new(0, 10, 0, 40 + (i-1)*35)
+    box.BackgroundColor3 = Color3.fromRGB(0,0,0)
+    box.Text = ""
+    box.Parent = frame
+
+    local optionName = text
+    box.MouseButton1Click:Connect(function()
+        toggleStates[optionName] = not toggleStates[optionName]
+        if toggleStates[optionName] then
+            box.BackgroundColor3 = Color3.fromRGB(0,255,0)
+        else
+            box.BackgroundColor3 = Color3.fromRGB(0,0,0)
+        end
+        if optionName=="BOX ESP" then
+            if toggleStates[optionName] then enableESP() else disableESP() end
+        end
+    end)
+end
+
+-- FOV Slider
+local fovValue = 200
+local sliderLabel = Instance.new("TextLabel")
+sliderLabel.Text = "FOV ("..fovValue..")"
+sliderLabel.Size = UDim2.new(0,200,0,30)
+sliderLabel.Position = UDim2.new(0,40,0,145)
+sliderLabel.BackgroundTransparency = 1
+sliderLabel.TextColor3 = Color3.fromRGB(255,255,255)
+sliderLabel.Font = Enum.Font.SourceSansBold
+sliderLabel.TextSize = 18
+sliderLabel.TextXAlignment = Enum.TextXAlignment.Left
+sliderLabel.Parent = frame
+
+local sliderFrame = Instance.new("Frame")
+sliderFrame.Size = UDim2.new(0,200,0,10)
+sliderFrame.Position = UDim2.new(0,40,0,170)
+sliderFrame.BackgroundColor3 = Color3.fromRGB(70,70,70)
+sliderFrame.Parent = frame
+
+local sliderButton = Instance.new("Frame")
+sliderButton.Size = UDim2.new(0,20,0,20)
+sliderButton.Position = UDim2.new(0,120,0,165)
+sliderButton.BackgroundColor3 = Color3.fromRGB(255,255,255)
+sliderButton.Parent = frame
+
+-- Make slider button draggable with improved functionality
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
+sliderButton.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = sliderButton.Position
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
+        local newX = startPos.X.Offset + delta.X
+        newX = math.clamp(newX, 40, 220)
+        sliderButton.Position = UDim2.new(0, newX, 0, 165)
+        
+        local percentage = (newX - 40) / 180
+        fovValue = math.floor(percentage * 500 + 50)
+        sliderLabel.Text = "FOV ("..fovValue..")"
+    end
+end)
+
+UIS.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
+
+-- Dropdown menu for target selection
+local targetPart = "Head"
+local dropdownLabel = Instance.new("TextLabel")
+dropdownLabel.Text = "Target Part:"
+dropdownLabel.Size = UDim2.new(0,100,0,20)
+dropdownLabel.Position = UDim2.new(0,40,0,195)
+dropdownLabel.BackgroundTransparency = 1
+dropdownLabel.TextColor3 = Color3.fromRGB(255,255,255)
+dropdownLabel.Font = Enum.Font.SourceSansBold
+dropdownLabel.TextSize = 16
+dropdownLabel.TextXAlignment = Enum.TextXAlignment.Left
+dropdownLabel.Parent = frame
+
+local dropdownButton = Instance.new("TextButton")
+dropdownButton.Size = UDim2.new(0,150,0,25)
+dropdownButton.Position = UDim2.new(0,140,0,192)
+dropdownButton.BackgroundColor3 = Color3.fromRGB(60,60,60)
+dropdownButton.Text = targetPart.." ▼"
+dropdownButton.TextColor3 = Color3.fromRGB(255,255,255)
+dropdownButton.Font = Enum.Font.SourceSans
+dropdownButton.TextSize = 14
+dropdownButton.Parent = frame
+
+local dropdownFrame = Instance.new("Frame")
+dropdownFrame.Size = UDim2.new(0,150,0,50)
+dropdownFrame.Position = UDim2.new(0,140,0,217)
+dropdownFrame.BackgroundColor3 = Color3.fromRGB(50,50,50)
+dropdownFrame.Visible = false
+dropdownFrame.Parent = frame
+
+local dropdownOptions = {"Head", "HumanoidRootPart"}
+for i, option in ipairs(dropdownOptions) do
+    local optionButton = Instance.new("TextButton")
+    optionButton.Size = UDim2.new(1,0,0,25)
+    optionButton.Position = UDim2.new(0,0,0,(i-1)*25)
+    optionButton.BackgroundColor3 = Color3.fromRGB(50,50,50)
+    optionButton.Text = option
+    optionButton.TextColor3 = Color3.fromRGB(255,255,255)
+    optionButton.Font = Enum.Font.SourceSans
+    optionButton.TextSize = 14
+    optionButton.Parent = dropdownFrame
+    
+    optionButton.MouseButton1Click:Connect(function()
+        targetPart = option
+        dropdownButton.Text = targetPart.." ▼"
+        dropdownFrame.Visible = false
+    end)
+    
+    optionButton.MouseEnter:Connect(function()
+        optionButton.BackgroundColor3 = Color3.fromRGB(70,70,70)
+    end)
+    
+    optionButton.MouseLeave:Connect(function()
+        optionButton.BackgroundColor3 = Color3.fromRGB(50,50,50)
+    end)
+end
+
+dropdownButton.MouseButton1Click:Connect(function()
+    dropdownFrame.Visible = not dropdownFrame.Visible
+end)
+
+-- Aimbot functionality
+local A = 0.75
+local C = workspace.CurrentCamera
+local aimCircle = Drawing.new("Circle")
+aimCircle.Color = Color3.new(1,1,1)
+aimCircle.Thickness = 1
+aimCircle.NumSides = 100
+aimCircle.Radius = fovValue
+aimCircle.Transparency = 1
+aimCircle.Filled = false
+aimCircle.Visible = false  -- Start invisible
+
+local aimbotActive = false
+local function getClosest()
+    local closest = nil
+    local shortest = fovValue
+    for _, pl in pairs(Players:GetPlayers()) do
+        if pl ~= LocalPlayer and (not toggleStates["TEAM CHECK"] or pl.Team ~= LocalPlayer.Team) then
+            local ch = pl.Character
+            local bon = ch and ch:FindFirstChild(targetPart)
+            local hum = ch and ch:FindFirstChild("Humanoid")
+            if bon and hum and hum.Health > 0 then
+                local pos, onScreen = C:WorldToViewportPoint(bon.Position)
+                if onScreen then
+                    local mag = (Vector2.new(pos.X,pos.Y)-Vector2.new(C.ViewportSize.X/2,C.ViewportSize.Y/2)).Magnitude
+                    if mag < shortest then
+                        shortest = mag
+                        closest = bon
+                    end
+                end
+            end
+        end
+    end
+    return closest
+end
+
+local loop
+loop = RunService.RenderStepped:Connect(function()
+    aimCircle.Position = Vector2.new(C.ViewportSize.X/2,C.ViewportSize.Y/2)
+    aimCircle.Radius = fovValue
+    
+    -- Only show FOV circle when aimbot is enabled
+    aimCircle.Visible = toggleStates["AIMBOT"]
+    
+    if toggleStates["AIMBOT"] and aimbotActive then
+        local targ = getClosest()
+        if targ then
+            local pos = C:WorldToViewportPoint(targ.Position)
+            local mouse = game.Players.LocalPlayer:GetMouse()
+            mousemoverel((pos.X-C.ViewportSize.X/2)*A,(pos.Y-C.ViewportSize.Y/2)*A)
+        end
+    end
+end)
+
+UIS.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then 
+        aimbotActive = true 
+    end
+    
+    -- Toggle GUI visibility with X key
+    if input.KeyCode == Enum.KeyCode.X then
+        guiVisible = not guiVisible
+        frame.Visible = guiVisible
+    end
+end)
+
+UIS.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then 
+        aimbotActive = false 
+    end
+end)
+
+closeButton.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
