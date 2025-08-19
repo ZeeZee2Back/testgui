@@ -18,7 +18,7 @@ topBar.Parent = frame
 topBar.Active = true
 
 local title = Instance.new("TextLabel")
-title.Text = "Test GUI"
+title.Text = "Legit Arsneal Gui Timmyhub | 🖤"
 title.Size = UDim2.new(1, 0, 1, 0)
 title.BackgroundTransparency = 1
 title.TextColor3 = Color3.fromRGB(255, 0, 0)
